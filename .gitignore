@@ -1,0 +1,9 @@
+**/.venv/
+**/__pycache__/
+**/.pytest_cache/
+**/bot_service.egg-info/
+**/auth_service.egg_info/
+.ruff_cache
+**/auth.db
+**/.env
+**/.python-version
