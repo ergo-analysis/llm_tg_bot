@@ -1,7 +1,7 @@
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from db import User
+from ..db import User
 
 class UserRepository:
     """Репозиторий пользователей"""

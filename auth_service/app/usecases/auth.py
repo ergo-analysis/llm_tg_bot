@@ -1,9 +1,9 @@
-from core import (UserAlreadyExistsError, PermissionDeniedError, UserNotFoundError, 
+from ..core import (UserAlreadyExistsError, PermissionDeniedError, UserNotFoundError, 
                   hash_password, verify_password, create_access_token)
 
-from repositories import UserRepository
-from schemas import RegisterRequest, TokenResponse, UserPublic
-from db import User
+from ..repositories import UserRepository
+from ..schemas import RegisterRequest, TokenResponse, UserPublic
+from ..db import User
 
 class AuthUseCase:
     """Логика аутентификации"""

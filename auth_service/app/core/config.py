@@ -6,7 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 class Settings(BaseSettings):
     """Настройки приложения"""
     model_config = SettingsConfigDict(
-        env_file=BASE_DIR / ".env"
+        env_file=BASE_DIR / ".env",
         env_prefix="",
         case_sensitive=False,)
 

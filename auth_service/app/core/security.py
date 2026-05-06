@@ -2,7 +2,8 @@ from datetime import datetime, timedelta, timezone
 from passlib.context import CryptContext
 from jose import jwt, ExpiredSignatureError, JWTError
 
-from core import settings, InvalidTokenError, TokenExpiredError
+from .exceptions import InvalidTokenError, TokenExpiredError
+from .config import settings
 
 # контекст хеширования
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -20,7 +21,7 @@ def create_access_token(user_id: int, role: str, expires_minutes: int | None = N
     ttl_minutes = expires_minutes or settings.ACCESS_TOKEN_EXPIRE_MINUTES
     expire = datetime.now(timezone.utc) + timedelta(minutes=ttl_minutes)
     to_encode = {
-        'sub': user_id,
+        'sub': str(user_id),
         'role': role,
         "exp": expire,
         "iat": datetime.now(timezone.utc)}
