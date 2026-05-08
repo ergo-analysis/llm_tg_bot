@@ -2,7 +2,8 @@ from celery import shared_task
 from app.infra.celery_app import celery_app
 from app.services.openrouter_client import openrouter_client
 from aiogram import Bot
-from app.core.config import settings
+
+from ..core import settings
 
 @celery_app.task(name="llm_request")
 def llm_request(tg_chat_id: int, prompt: str):

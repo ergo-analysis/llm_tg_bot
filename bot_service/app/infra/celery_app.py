@@ -1,5 +1,5 @@
 from celery import Celery
-from ..core import settings
+from app.core.config import settings
 
 celery_app = Celery(
     "bot_service",
@@ -15,4 +15,4 @@ celery_app.conf.update(
     enable_utc=True,
 )
 
-celery_app.autodiscover_tasks(["app.tasks"])
+import app.tasks.llm_tasks  

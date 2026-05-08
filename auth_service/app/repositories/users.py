@@ -28,3 +28,4 @@ class UserRepository:
         await self._db.commit()
         await self._db.refresh(user)
         return user
+    
