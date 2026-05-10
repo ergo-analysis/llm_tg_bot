@@ -15,4 +15,5 @@ celery_app.conf.update(
     enable_utc=True,
 )
 
-import app.tasks.llm_tasks  
+# Автообнаружение задач (без импорта, чтобы избежать цикла)
+celery_app.autodiscover_tasks(["app.tasks"])

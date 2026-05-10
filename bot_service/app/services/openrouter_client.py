@@ -1,5 +1,5 @@
 import httpx
-from app.core.config import settings
+from ..core import settings
 
 class OpenRouterClient:
     """Клиент для работы с OpenRouter API"""

@@ -1,5 +1,5 @@
 from jose import JWTError, jwt
-from app.core.config import settings
+from ..core import settings
 
 def decode_and_validate(token: str) -> dict:
     try:

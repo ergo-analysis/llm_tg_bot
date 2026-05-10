@@ -1,8 +1,8 @@
 from aiogram import Router, types
 from aiogram.filters import Command
-from app.infra.redis import get_redis
-from app.core.jwt import decode_and_validate
-from app.tasks.llm_tasks import llm_request
+from ..infra import get_redis
+from ..core.jwt import decode_and_validate
+from ..tasks import llm_request
 
 router = Router()
 
