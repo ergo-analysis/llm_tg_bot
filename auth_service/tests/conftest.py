@@ -1,6 +1,3 @@
-import os
-os.environ["PYDANTIC_EMAIL_VALIDATOR_SKIP_MX_CHECK"] = "true"
-
 import pytest
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
@@ -10,19 +7,14 @@ from app.main import app
 
 TEST_DATABASE_URL = "sqlite+aiosqlite://"
 
-@pytest.fixture(autouse=True)
-def patch_email_validator(monkeypatch):
-    import email_validator
-    def fake_validate_email(email, **kwargs):
-        class FakeEmail:
-            normalized = email
-            local_part = email.split('@')[0]
-            domain = email.split('@')[1]
-        return FakeEmail()
-    monkeypatch.setattr(email_validator, "validate_email", fake_validate_email)
+@pytest.fixture(autouse=True, scope="function")
+async def setup_db():
+    """
+    Создаёт in‑memory БД, переопределяет зависимость get_db,
+    подменяет engine в app.db.session для корректной работы lifespan,
+    удаляет таблицы после теста
+    """
 
-@pytest.fixture(scope="function")
-async def client(monkeypatch):
     test_engine = create_async_engine(TEST_DATABASE_URL, echo=False)
     test_sessionmaker = async_sessionmaker(
         test_engine, class_=AsyncSession, expire_on_commit=False
@@ -42,12 +34,30 @@ async def client(monkeypatch):
     async with test_engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
-    transport = ASGITransport(app=app)
-    async with AsyncClient(transport=transport, base_url="http://test") as ac:
-        yield ac
+    yield
 
     async with test_engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
     sess.engine = original_engine
     sess.SessionLocal = original_sessionmaker
     app.dependency_overrides.clear()
+    await test_engine.dispose()
+
+
+@pytest.fixture
+async def client():
+    """HTTP-клиент для тестирования API."""
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as ac:
+        yield ac
+
+
+@pytest.fixture
+async def test_user(client):
+    """Регистрирует тестового пользователя и возвращает креды."""
+    resp = await client.post(
+        "/auth/register",
+        json={"email": "test@example.com", "password": "testpass123"}
+    )
+    assert resp.status_code == 201
+    return resp.json()
