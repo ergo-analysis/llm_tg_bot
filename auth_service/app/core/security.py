@@ -43,3 +43,4 @@ def decode_token(token: str) -> dict:
 
     except JWTError as e:
         raise InvalidTokenError() from e
+    

@@ -1,5 +1,11 @@
-from ..core import (UserAlreadyExistsError, PermissionDeniedError, UserNotFoundError, 
-                  hash_password, verify_password, create_access_token)
+from ..core import (
+    UserAlreadyExistsError,
+    InvalidCredentialsError,   
+    UserNotFoundError,
+    hash_password,
+    verify_password,
+    create_access_token,
+)
 
 from ..repositories import UserRepository
 from ..schemas import RegisterRequest, TokenResponse, UserPublic
@@ -27,11 +33,9 @@ class AuthUseCase:
 
 
     async def login(self, username: str, password: str) -> TokenResponse:
-        """Логин и выдача токена"""
         user = await self._storage.get_by_email(username)
         if not user or not verify_password(password, user.password_hash):
-            raise PermissionDeniedError()
-
+            raise InvalidCredentialsError()   # вместо PermissionDeniedError()
         token = create_access_token(user.id, user.role)
         return TokenResponse(access_token=token)
 
