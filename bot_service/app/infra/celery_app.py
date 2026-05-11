@@ -13,7 +13,13 @@ celery_app.conf.update(
     result_serializer="json",
     timezone="UTC",
     enable_utc=True,
+    broker_connection_retry_on_startup=True,
+    broker_transport_options={
+        'max_retries': 10,
+        'interval_start': 2,
+        'interval_step': 2,
+        'interval_max': 10,
+    },
 )
 
-# Автообнаружение задач (без импорта, чтобы избежать цикла)
-celery_app.autodiscover_tasks(["app.tasks"])
+import app.tasks.llm_tasks  # noqa: F401
