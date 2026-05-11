@@ -127,11 +127,11 @@ llm_tg_bot/
 
 **Rabbit**
 
-Общий вид
-1) ![alt text](screenshots/RabbitMQ.png)
+1) Общий вид
+![alt text](screenshots/RabbitMQ.png)
 
-Демонстрация накопления сообщений
-2) ![alt text](screenshots/RabbitMQ_queued_messages.png)
+2) Демонстрация накопления сообщений
+![alt text](screenshots/RabbitMQ_queued_messages.png)
 
 **Тесты**
 
