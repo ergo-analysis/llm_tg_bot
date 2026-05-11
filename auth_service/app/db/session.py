@@ -1,9 +1,8 @@
 from typing import AsyncGenerator
 
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.config import get_database_url, settings
+from app.core.config import get_database_url
 
 class Database:
     """Класс подключения к БД"""

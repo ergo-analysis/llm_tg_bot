@@ -2,7 +2,6 @@ from aiogram import Router, types
 from aiogram.filters import Command
 from ..infra import get_redis
 from ..core.jwt import decode_and_validate
-from ..tasks import llm_request
 
 router = Router()
 
@@ -27,7 +26,7 @@ async def handle_text(message: types.Message):
         await message.answer("Сначала отправьте токен командой /token <JWT>", parse_mode=None)
         return
     try:
-        payload = decode_and_validate(token)
+        payload = decode_and_validate(token) # noqa: F841
     except ValueError:
         await message.answer("Ваш токен недействителен. Получите новый в Auth Service.", parse_mode=None)
         return

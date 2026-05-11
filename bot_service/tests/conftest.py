@@ -2,7 +2,6 @@ import pytest
 from unittest.mock import AsyncMock, MagicMock
 import fakeredis.aioredis
 
-import app.infra.celery_app
 
 @pytest.fixture(autouse=True)
 def mock_redis(monkeypatch, mocker):

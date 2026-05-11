@@ -33,7 +33,7 @@ celery_app.conf.update(
     task_acks_late=True,
 )
 
-import app.tasks.llm_tasks  # noqa: F401
+import app.tasks.llm_tasks  # noqa: F401, E402
 
 
 def ensure_celery_connection():

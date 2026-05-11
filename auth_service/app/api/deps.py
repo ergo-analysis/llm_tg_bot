@@ -1,10 +1,9 @@
-from jose import jwt
 from jose.exceptions import ExpiredSignatureError, JWTError
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Annotated, AsyncGenerator
+from typing import AsyncGenerator
 
 from ..db import get_db as _get_db
 from ..repositories import UserRepository
@@ -42,6 +41,6 @@ async def get_current_user_id(token: str = Depends(oauth2_scheme)) -> str:
     except ExpiredSignatureError:
         raise TokenExpiredError()
     
-    except JWTError as e:
+    except JWTError:
         raise InvalidTokenError()
     

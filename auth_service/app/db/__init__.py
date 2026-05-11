@@ -1,3 +1,3 @@
 from .models import User
-from .session import get_db, engine, settings
+from .session import get_db, engine
 from .base import Base
