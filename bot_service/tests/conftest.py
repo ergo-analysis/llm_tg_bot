@@ -5,19 +5,21 @@ import fakeredis.aioredis
 import app.infra.celery_app
 
 @pytest.fixture(autouse=True)
-def mock_redis(monkeypatch):
-    """Подменяет get_redis на fake Redis с decode_responses=True."""
+def mock_redis(monkeypatch, mocker):
+    """Подменяет get_redis на fake Redis с decode_responses=True и мокает Celery backend."""
     fake_conn = fakeredis.aioredis.FakeRedis(decode_responses=True)
     async def fake_get_redis():
         return fake_conn
     monkeypatch.setattr("app.bot.handlers.get_redis", fake_get_redis)
     monkeypatch.setattr("app.infra.redis.get_redis", fake_get_redis)
+    # Mock Celery backend to avoid Redis connection issues in tests
+    mocker.patch("app.infra.celery_app.celery_app.backend.on_task_call")
     return fake_conn
 
 @pytest.fixture
 def mock_llm_delay(mocker):
-    """Мокает delay задачи Celery."""
-    return mocker.patch("app.bot.handlers.llm_request.delay")
+    """Мокает send_task метод Celery app."""
+    return mocker.patch("app.infra.celery_app.celery_app.send_task")
 
 @pytest.fixture
 def mock_bot(mocker):

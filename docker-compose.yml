@@ -1,4 +1,6 @@
-version: '3.8'
+networks:
+  app-network:
+    driver: bridge
 
 services:
   rabbitmq:
@@ -14,6 +16,8 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+    networks:
+      - app-network
 
   redis:
     image: redis:7-alpine
@@ -24,6 +28,8 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+    networks:
+      - app-network
 
   auth-service:
     build: ./auth_service
@@ -37,7 +43,10 @@ services:
       redis:
         condition: service_healthy
     volumes:
-      - ./auth_service/auth.db:/app/auth.db   
+      - ./auth_service/auth.db:/app/auth.db
+    networks:
+      - app-network
+    restart: on-failure
 
   celery-worker:
     build: ./bot_service
@@ -49,12 +58,15 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    networks:
+      - app-network
+    restart: on-failure
 
   bot-service:
     build: ./bot_service
     command: python -c "import asyncio; from app.bot.dispatcher import start_polling; asyncio.run(start_polling())"
     ports:
-      - "8001:8000"  # если нужен FastAPI /health
+      - "8001:8000"
     env_file:
       - ./bot_service/.env
     depends_on:
@@ -62,3 +74,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      celery-worker:
+        condition: service_started
+    networks:
+      - app-network
+    restart: on-failure

@@ -45,7 +45,6 @@ llm_tg_bot/
 │   │   ├── test_auth_api.py
 │   │   └── test_security.py
 │   ├── .env
-│   ├── auth.db
 │   ├── Dockerfile
 │   ├── pyproject.toml
 │   ├── pytest.ini
@@ -94,7 +93,7 @@ llm_tg_bot/
 
 **Сценарий работы**
 
-1) Запуск приложения sudo docker-compose up (или sudo docker-compose up -d)
+1) Запуск приложения docker-compose up -d
 2) Переход по ссылке: http://localhost:8000/docs и регистрация пользователя
 3) Авторизация и получение токена 
 4) Передача токена в ТГ бота @llm_py_bot командой /token 
@@ -128,16 +127,16 @@ llm_tg_bot/
 
 **Rabbit**
 
-![alt text](screenshots/RabbitMQ.png)
+Общий вид
+1) ![alt text](screenshots/RabbitMQ.png)
+
+Демонстрация накопления сообщений
+2) ![alt text](screenshots/RabbitMQ_queued_messages.png)
 
 **Тесты**
 
 1) auth_service
-
 ![alt text](screenshots/Тестирование_auth_service.png)
 
 2) bot_service 
-
 ![alt text](screenshots/Тестирование_bot_service.png)
-
-

@@ -32,5 +32,6 @@ async def handle_text(message: types.Message):
         await message.answer("Ваш токен недействителен. Получите новый в Auth Service.", parse_mode=None)
         return
 
-    llm_request.delay(tg_chat_id=message.chat.id, prompt=message.text)
+    from ..infra.celery_app import celery_app
+    celery_app.send_task('llm_request', kwargs={'tg_chat_id': message.chat.id, 'prompt': message.text})
     await message.answer("Запрос принят, ожидайте ответ...", parse_mode=None)

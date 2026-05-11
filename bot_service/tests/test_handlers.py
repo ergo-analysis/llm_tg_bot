@@ -88,6 +88,5 @@ class TestTextHandling:
 
         await handle_text(msg)
 
-        mock_llm_delay.assert_called_once_with(tg_chat_id=888, prompt="Привет, LLM!")
+        mock_llm_delay.assert_called_once_with('llm_request', kwargs={'tg_chat_id': 888, 'prompt': 'Привет, LLM!'})
         msg.answer.assert_called_with("Запрос принят, ожидайте ответ...", parse_mode=None)
-        
